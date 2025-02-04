@@ -1,0 +1,18 @@
+const express = require('express')
+const bodyparser = require('body-parser')
+
+app = express();
+app.use(bodyparser.json())
+
+app.get("/",(req,res)=>{
+
+let jsondata = req.body;
+let stringdata = JSON.stringify(jsondata)
+res.send(stringdata)
+
+
+})
+
+app.listen(4000,()=>{
+    console.log("server is working successfully")
+})
