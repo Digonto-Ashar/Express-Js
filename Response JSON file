@@ -1,0 +1,42 @@
+const express = require('express')
+
+app = express();
+
+app.get('/',(req,res)=>{
+    res.send("yesss! this is wroking good")
+})
+app.post('/test',(req,res)=>{
+    
+    let jsonfile = [
+    {
+        name: "Ashar",
+        city:"Dhaka",
+        hobby: "music"
+    },
+    {
+        name: "Akash",
+        city:"Rangpur",
+        hobby: "sports"
+    },
+    {
+        name: "Digonto",
+        city:"Bogura",
+        hobby: "travelling"
+    }
+
+    ]
+
+    res.json(jsonfile)
+
+
+})
+app.put('/',(req,res)=>{
+    res.send("this is wroking good")
+})
+app.delete('/',(req,res)=>{
+    res.send("this is wroking good")
+})
+
+app.listen(4000,()=>{
+    console.log("server is working successfully")
+})
