@@ -1,0 +1,45 @@
+const express = require('express')
+const router = express();
+const bodyParser =require('body-parser')
+
+
+router.use(bodyParser.urlencoded({ extended: false }))
+router.use(bodyParser.json())
+
+router.post('/user',(req,res)=>{
+    const name = req.body.name
+    const city = req.body.city
+    res.send(`here is name & city ${name}, ${city}`)
+})
+
+router.get('/',(req,res)=>{
+    res.send("Server is working properly")
+})
+
+router.get('/about',(req,res)=>{
+    res.status(200).json({
+        message: "Successful",
+        statusCode: "200"
+    })
+})
+
+
+router.use('/contact',(req,res,next)=>{
+    console.log("this is a middleware function")
+    next()
+})
+
+
+router.get('/contact',(req,res)=>{
+    res.send("contact page is working properly")
+
+})
+router.get('/cookie',(req,res)=>{
+    res.cookie("name", "ashar")
+    res.cookie("city", "dhaka")
+    res.append("id", "101")
+    res.end()
+
+})
+
+module.exports= router;
