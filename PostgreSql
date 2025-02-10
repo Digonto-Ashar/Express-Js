@@ -1,0 +1,82 @@
+const express = require('express')
+const { v4: uuidv4 } = require('uuid');
+const pool = require('./db')
+require('dotenv').config();
+
+const app = express();
+const port = 5050
+
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+
+
+app.get('/',(req,res)=>{
+    res.end("This is Home Page")
+})
+
+//get all data
+app.get('/about',async(req,res)=>{
+    try {
+        const details = await pool.query("SELECT * FROM location")
+        res.status(200).json({message: 'Here is all details', data: details.rows})
+    } catch (error) {
+        res.json({error:error.message})
+        
+    }
+})
+
+//get specific data
+app.get('/about/:id',async(req,res)=>{
+    try {
+        const {id} = req.params
+        const details = await pool.query("SELECT * FROM location WHERE ID = $1", [id])
+        res.status(200).json({message: 'Here is the details', data: details.rows})
+    } catch (error) {
+        res.json({error:error.message})
+        
+    }
+})
+
+//delete specific row 
+app.delete('/about/:id',async(req,res)=>{
+    try {
+        const {id} = req.params
+        const details1 = await pool.query("DELETE FROM location WHERE id = $1", [id])
+        res.status(200).json({message: 'Data Deleted'})
+    } catch (error) {
+        res.json({error:error.message})
+        
+    }
+})
+
+//insert data 
+app.post('/about',async(req,res)=>{
+    try {
+        const id = uuidv4();
+        const {name, adress} = req.body
+        const newAdress = await pool.query(`INSERT INTO location(id, name , adress)
+            VALUES ($1, $2, $3) RETURNING *` , [id, name, adress]);
+        res.status(200).json({message: `New adress created`, data : newAdress.rows})
+    } catch (error) {
+        res.json({error:error.message})
+        
+    }
+})
+
+//update data
+app.put('/about/:id',async(req,res)=>{
+    try {
+        const {id} = req.params
+        const {name, adress} = req.body
+        const details2 = await pool.query("UPDATE location SET name=$1, adress=$2 WHERE id = $3 RETURNING *", [name, adress,id])
+        res.status(200).json({message: 'Data Updated', data: details2.rows})
+    } catch (error) {
+        res.json({error:error.message})
+        
+    }
+})
+
+
+app.listen(port,()=>{
+    console.log(`Server running successfully, http://localhost:${port}`)
+})
